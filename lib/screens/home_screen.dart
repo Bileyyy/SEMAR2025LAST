@@ -407,9 +407,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                _buildGalleryImage("assets/bg/majt.png"),
-                _buildGalleryImage("assets/bg/lumpia.png"),
+                _buildGalleryImage("assets/bg/lawubaru.jpg"),
+                _buildGalleryImage("assets/bg/kotlam.png"),
                 _buildGalleryImage("assets/bg/kariadi.png"),
+                _buildGalleryImage("assets/bg/museum.png"),
+                _buildGalleryImage("assets/bg/sampo.png"),
+                _buildGalleryImage("assets/bg/wbabat.png"),
+                _buildGalleryImage("assets/bg/lumpia.png"),
+                _buildGalleryImage("assets/bg/majt.png"),
+                _buildGalleryImage("assets/bg/snc.jpg"),
+                _buildGalleryImage("assets/bg/dugderan.jpeg"),
               ],
             ),
           ),
@@ -607,7 +614,7 @@ Widget _buildNewsEventsSection() {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Event",
+            "Acara",
             style: TextStyle(
               fontFamily: 'Poppins',
               fontSize: 16,
@@ -877,7 +884,7 @@ class _SemarAIChatState extends State<SemarAIChat> {
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
 
-  static const String _apiKey = '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';
+  static const String _apiKey = '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';
 
   @override
   void initState() {

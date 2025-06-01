@@ -1,8 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CallCenterScreen extends StatelessWidget {
+class CallCenterScreen extends StatefulWidget {
   const CallCenterScreen({super.key});
+
+  @override
+  State<CallCenterScreen> createState() => _CallCenterScreenState();
+}
+
+class _CallCenterScreenState extends State<CallCenterScreen> {
+  final List<Map<String, String>> _callCenterList = [
+    {
+      "title": "Pemadam Kebakaran",
+      "subtitle": "113 / 7607076 / 7605871 / 7616867",
+      "image": "assets/bg/damkar.png"
+    },
+    {
+      "title": "Polisi",
+      "subtitle": "110",
+      "image": "assets/bg/polisije.jpg"
+    },
+    {
+      "title": "Ambulance Kecelakaan",
+      "subtitle": "8313416",
+      "image": "assets/bg/ambulance.png"
+    },
+    {
+      "title": "Palang Merah Indonesia",
+      "subtitle": "118 / 8413476",
+      "image": "assets/bg/pmise.jpg"
+    },
+    {
+      "title": "Tim Sar Semarang",
+      "subtitle": "8315514",
+      "image": "assets/bg/sar.png"
+    },
+  ];
+
+  String _searchQuery = "";
+  final TextEditingController _searchController = TextEditingController();
 
   void copyToClipboard(BuildContext context, String text) {
     Clipboard.setData(ClipboardData(text: text));
@@ -15,144 +51,139 @@ class CallCenterScreen extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final filteredList = _callCenterList.where((item) {
+      final query = _searchQuery.toLowerCase();
+      return item['title']!.toLowerCase().contains(query) ||
+          item['subtitle']!.toLowerCase().contains(query);
+    }).toList();
+
     return Scaffold(
       body: Stack(
         children: [
-          // Background (mengikuti destinasi_screen)
+          // Background image
           Container(
+            width: double.infinity,
+            height: screenHeight,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/bg/bg_home.jpg"),
+                image: AssetImage("assets/bg/lawang1000.png"),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          SafeArea(
-            child: Column(
-              children: [
-                // AppBar dengan tombol back dan search
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Colors.black.withOpacity(0.2),
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(Icons.arrow_back, color: Colors.black),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Colors.black.withOpacity(0.2),
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.search, color: Colors.grey),
-                              SizedBox(width: 10),
-                              Text(
-                                "Cari Disini",
-                                style: TextStyle(fontFamily: 'Poppins', color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          Container(
+            width: double.infinity,
+            height: screenHeight,
+            color: const Color(0xFFFFF2DA).withOpacity(0.6),
+          ),
 
-                // Judul
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Back button
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+
+                  // Search bar
+                  Container(
+                    margin: const EdgeInsets.only(top: 10, bottom: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Cari di sini",
+                        hintStyle: const TextStyle(fontFamily: 'Poppins'),
+                        border: InputBorder.none,
+                        icon: const Icon(Icons.search, color: Color(0xFF275E76)),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _searchQuery = "";
+                              _searchController.clear();
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Judul
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     child: Text(
                       "Call Center",
                       style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                         shadows: [
-                          Shadow(blurRadius: 4, color: Colors.black54, offset: Offset(0, 2))
+                          Shadow(
+                            blurRadius: 4,
+                            color: Colors.black54,
+                            offset: Offset(0, 2),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
 
-                // Daftar Call Center
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF5F2EF),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24),
-                      ),
-                    ),
-                    child: ListView(
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        callItem(
-                          context,
-                          imagePath: 'assets/bg/damkar.png',
-                          title: 'Pemadam Kebakaran',
-                          subtitle: '113 / 7607076 / 7605871 / 7616867',
-                        ),
-                        callItem(
-                          context,
-                          imagePath: 'assets/bg/polisije.jpg',
-                          title: 'Polisi',
-                          subtitle: '110',
-                        ),
-                        callItem(
-                          context,
-                          imagePath: 'assets/bg/ambulance.png',
-                          title: 'Ambulance Kecelakaan',
-                          subtitle: '8313416',
-                        ),
-                        callItem(
-                          context,
-                          imagePath: 'assets/bg/pmise.jpg',
-                          title: 'Palang Merah Indonesia',
-                          subtitle: '118 / 8413476',
-                        ),
-                        callItem(
-                          context,
-                          imagePath: 'assets/bg/sar.png',
-                          title: 'Tim Sar Semarang',
-                          subtitle: '8315514',
-                        ),
-                      ],
-                    ),
+                  // Daftar call center
+                  Expanded(
+                    child: filteredList.isNotEmpty
+                        ? ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: filteredList.length,
+                            itemBuilder: (context, index) {
+                              final item = filteredList[index];
+                              return callItem(
+                                context,
+                                imagePath: item['image']!,
+                                title: item['title']!,
+                                subtitle: item['subtitle']!,
+                              );
+                            },
+                          )
+                        : const Center(
+                            child: Text(
+                              "Tidak ada data ditemukan.",
+                              style: TextStyle(fontSize: 16, color: Colors.black54),
+                            ),
+                          ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -168,47 +199,61 @@ class CallCenterScreen extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.black26, offset: Offset(2, 2))],
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(imagePath, width: 60, height: 60, fit: BoxFit.cover),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: GestureDetector(
-              onLongPress: () {
-                if (subtitle.isNotEmpty) {
-                  copyToClipboard(context, subtitle);
-                }
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  if (subtitle.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        subtitle,
-                        style: const TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 4,
+            color: Colors.black26,
+            offset: Offset(2, 2),
           ),
         ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                imagePath,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: GestureDetector(
+                onLongPress: () => copyToClipboard(context, subtitle),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    if (subtitle.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          subtitle,
+                          style: const TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

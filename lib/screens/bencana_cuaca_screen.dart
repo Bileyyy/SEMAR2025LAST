@@ -3,6 +3,7 @@ import 'package:semar/widgets/custom_navbar.dart';
 import 'package:semar/widgets/navbar.dart';
 import 'package:semar/screens/cuaca_screen.dart';
 import 'package:semar/screens/bencana_screen.dart';
+import 'package:semar/screens/jadwal_adzan_screen.dart'; // Add this import
 
 class BencanaCuacaScreen extends StatelessWidget {
   @override
@@ -60,6 +61,13 @@ class BencanaCuacaScreen extends StatelessWidget {
                             title: "Info Bencana",
                             icon: Icons.warning,
                             screen: BencanaScreen(),
+                          ),
+                          SizedBox(height: 30),
+                          _buildMenuButton(
+                            context: context,
+                            title: "Jadwal Adzan",
+                            icon: Icons.access_time,
+                            screen: JadwalAdzanScreen(),
                           ),
                         ],
                       ),

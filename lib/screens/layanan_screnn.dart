@@ -3,6 +3,28 @@ import 'package:semar/widgets/custom_navbar.dart';
 import 'package:semar/widgets/navbar.dart';
 
 class LayananScreen extends StatelessWidget {
+  final List<Map<String, String>> layanan = [
+    {
+      "nama": "Museum",
+      "gambar": "assets/bg/museum.png",
+    },
+    {
+      "nama": "Rumah Sakit",
+      "gambar": "assets/bg/rusa.png",
+    },
+    {
+      "nama": "Tempat Kebugaran",
+      "gambar": "assets/bg/kebugaran.png",
+    },
+    {
+      "nama": "Pemerintahan",
+      "gambar": "assets/bg/pemerintah.png",
+    },
+    {
+      "nama": "Tempat Penginapan",
+      "gambar": "assets/bg/tepengi.png",
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -37,13 +59,11 @@ class LayananScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Tombol kembali
                   IconButton(
                     icon: Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () => Navigator.pop(context),
                   ),
 
-                  // Search Bar
                   Container(
                     margin: EdgeInsets.only(top: 10, bottom: 20),
                     padding: EdgeInsets.symmetric(horizontal: 10),
@@ -69,7 +89,6 @@ class LayananScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // Judul kategori
                   Text(
                     "Layanan Publik",
                     style: TextStyle(
@@ -87,186 +106,38 @@ class LayananScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-
                   Expanded(
-  child: Column(
-    children: [
-      buildLayananItem("Museum", null),
-      buildLayananItem("Rumah Sakit", null),
-      buildLayananItem("Tempat Kebugaran", null),
-      buildLayananItem("Pemerintahan", null),
-      buildLayananItem("Tempat Penginapan", null),
-    ],
-  ),
-),
-
-
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(25),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.black.withOpacity(0.1),
-                  //         blurRadius: 10,
-                  //         spreadRadius: 2,
-                  //         offset: Offset(0, 4),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       SizedBox(width: 150),
-                  //       Text(
-                  //     "Museum",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 16,
-                  //       color: Colors.black
-                  //     ),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 15),
-
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(25),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.black.withOpacity(0.1),
-                  //         blurRadius: 10,
-                  //         spreadRadius: 2,
-                  //         offset: Offset(0, 4),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       SizedBox(width: 150),
-                  //       Text(
-                  //     "Rumah Sakit",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 16,
-                  //       color: Colors.black
-                  //     ),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 15),
-
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(25),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.black.withOpacity(0.1),
-                  //         blurRadius: 10,
-                  //         spreadRadius: 2,
-                  //         offset: Offset(0, 4),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       SizedBox(width: 150),
-                  //       Text(
-                  //     "Tempat Kebugaran",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 16,
-                  //       color: Colors.black
-                  //     ),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 15),
-
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(25),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.black.withOpacity(0.1),
-                  //         blurRadius: 10,
-                  //         spreadRadius: 2,
-                  //         offset: Offset(0, 4),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       SizedBox(width: 150),
-                  //       Text(
-                  //     "Pemerintahan",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 16,
-                  //       color: Colors.black
-                  //     ),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 15),
-
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(25),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.white,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     boxShadow: [
-                  //       BoxShadow(
-                  //         color: Colors.black.withOpacity(0.1),
-                  //         blurRadius: 10,
-                  //         spreadRadius: 2,
-                  //         offset: Offset(0, 4),
-                  //       ),
-                  //     ],
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       SizedBox(width: 150),
-                  //       Text(
-                  //     "Tempat Penginapan",
-                  //     style: TextStyle(
-                  //       fontFamily: 'Poppins',
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 14,
-                  //       color: Colors.black
-                  //     ),
-                  //     textAlign: TextAlign.center,
-                  //   ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 15),
-
-                  // Grid destinasi
+              child: ListView.builder(
+                itemCount: layanan.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    margin: EdgeInsets.only(bottom: 16),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(10),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          layanan[index]["gambar"]!,
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      title: Text(
+                        layanan[index]["nama"]!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins'),
+                      )
+                    )
+                      );
+                }
+              )
+                  )
                 ],
               ),
             ),
@@ -274,7 +145,7 @@ class LayananScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: CustomNavbar(
-        selectedIndex: -1, // ✅ Tidak ada opsi navbar yang dipilih
+        selectedIndex: -1, 
         onItemTapped: (index) {
           Navigator.pushReplacement(
             context,
@@ -285,7 +156,7 @@ class LayananScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk item destinasi
+
   Widget buildLayananItem(String title, String? imagePath) {
     return Container(
       margin: EdgeInsets.only(bottom: 15),

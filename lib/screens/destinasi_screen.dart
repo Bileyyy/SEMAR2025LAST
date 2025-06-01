@@ -210,6 +210,7 @@ class _DestinasiScreenState extends State<DestinasiScreen> {
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,

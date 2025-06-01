@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:semar/screens/dashboard.dart';
 import 'package:semar/screens/events_screen.dart';
 import '../screens/home_screen.dart';
-import 'package:semar/screens/profile_screen.dart'; 
+import 'package:semar/screens/profile_screen.dart';
 
 class Navbar extends StatefulWidget {
   final int selectedIndex;
@@ -26,7 +26,7 @@ class _NavbarState extends State<Navbar> {
   static final List<Widget> _pages = [
     HomeScreen(),
     EventsScreen(),
-    ProfileScreen(), // Gunakan ProfileScreen di sini
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -37,6 +37,8 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
+    final double bottomInset = MediaQuery.of(context).viewPadding.bottom;
+
     return Scaffold(
       extendBody: true,
       body: IndexedStack(
@@ -44,7 +46,7 @@ class _NavbarState extends State<Navbar> {
         children: _pages,
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: EdgeInsets.fromLTRB(20, 15, 20, bottomInset + 15),
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
