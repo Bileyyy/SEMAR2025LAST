@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:semar/screens/edit_profile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -112,10 +113,25 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        ListTile(
-                          leading: Icon(Icons.lock, color: Color(0xFF275E76), size: 20),
+                         ListTile(
+                          leading: Icon(Icons.edit, color: Color(0xFF275E76), size: 20),
                           title: Text(
-                            "Ubah Password",
+                            "Edit profile",
+                            style: TextStyle(fontFamily: 'Poppins', fontSize: 13),
+                          ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen())
+                        );
+                      },
+                        ),
+                        Divider(height: 1),
+                        ListTile(
+                          leading: Icon(Icons.settings, color: Color(0xFF275E76), size: 20),
+                          title: Text(
+                            "Pengaturan Akun",
                             style: TextStyle(fontFamily: 'Poppins', fontSize: 13),
                           ),
                           onTap: () {},

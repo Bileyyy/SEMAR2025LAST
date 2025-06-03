@@ -1,36 +1,35 @@
-// import 'package:flutter/material.dart';
-// import '../widgets/navbar.dart'; // Import Navbar untuk navigasi
+import 'package:flutter/material.dart';
+import 'package:semar/widgets/navbar.dart';
+import 'dart:async';
+import 'package:semar/screens/splash_screen.dart';
 
-// class StartScreen extends StatelessWidget {
-//   const StartScreen({super.key});
+class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//         title: const Text('Flutter Demo Home Page'),
-//       ),
-//       body: Container(
-//         decoration: const BoxDecoration(
-//           image: DecorationImage(
-//             image: AssetImage("assets/bg/lawang1000.png"), // Gambar background
-//             fit: BoxFit.cover,
-//           ),
-//         ),
-//         child: Center(
-//           child: ElevatedButton(
-//             onPressed: () {
-//               // Navigasi ke Navbar saat tombol ditekan
-//               Navigator.pushReplacement(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => Navbar()),
-//               );
-//             },
-//             child: const Text('Start'),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  State<StartScreen> createState() => _StartScreenState();
+}
+
+class _StartScreenState extends State<StartScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Delay 1 frame untuk push agar context tersedia
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const SplashScreen()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Color(0xFFFDF0D4),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}

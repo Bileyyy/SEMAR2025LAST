@@ -10,6 +10,7 @@ import 'package:semar/screens/callcenter_screen.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'dart:math';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -53,8 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
         name: "Lawang Sewu",
         imagePath: "assets/bg/lawang1000.png",
         rating: 4.7,
-        latitude: -6.983333,
-        longitude: 110.409722,
+        latitude: -6.9839838,
+        longitude: 110.4095893,
+        onTap: () => _openPlaceInMaps(-6.9839838, 110.4095893, "Lawang Sewu"),
       ),
       NearbyPlace(
         name: "Kota Lama",
@@ -62,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.5,
         latitude: -6.9675,
         longitude: 110.4256,
+        onTap: () => _openPlaceInMaps(-6.9675, 110.4256, "Kota Lama Semarang"),
       ),
       NearbyPlace(
         name: "Museum Ronggowarsito",
@@ -69,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.3,
         latitude: -7.0056,
         longitude: 110.4389,
+        onTap: () => _openPlaceInMaps(-7.0056, 110.4389, "Museum Ronggowarsito"),
       ),
       NearbyPlace(
         name: "Sam Poo Kong",
@@ -76,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.6,
         latitude: -7.0139,
         longitude: 110.4414,
+        onTap: () => _openPlaceInMaps(-7.0139, 110.4414, "Sam Poo Kong"),
       ),
       NearbyPlace(
         name: "Pagoda Avalokitesvara",
@@ -83,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.4,
         latitude: -7.0865,
         longitude: 110.4183,
+        onTap: () => _openPlaceInMaps(-7.0865, 110.4183, "Pagoda Avalokitesvara"),
       ),
       NearbyPlace(
         name: "Tugu Muda",
@@ -90,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.2,
         latitude: -6.9825,
         longitude: 110.4086,
+        onTap: () => _openPlaceInMaps(-6.9825, 110.4086, "Tugu Muda Semarang"),
       ),
       NearbyPlace(
         name: "Masjid Agung Jawa Tengah",
@@ -97,15 +104,31 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.8,
         latitude: -7.0058,
         longitude: 110.4411,
+        onTap: () => _openPlaceInMaps(-7.0058, 110.4411, "Masjid Agung Jawa Tengah"),
       ),
       NearbyPlace(
         name: "Kampung Pelangi",
         imagePath: "assets/bg/kpelangi.jpg",
         rating: 4.1,
-        latitude: -6.9892,
-        longitude: 110.4228,
+        latitude: -6.9888812,
+        longitude: 110.4083781,
+        onTap: () => _openPlaceInMaps(-6.9888812, 110.4083781, "Kampung Pelangi Semarang"),
       ),
     ];
+  }
+
+  Future<void> _openPlaceInMaps(double lat, double lng, String placeName) async {
+    final url = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query_place_id=$placeName'
+    );
+    
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Tidak dapat membuka Google Maps')),
+      );
+    }
   }
 
   Future<void> _getCurrentLocation() async {
@@ -510,7 +533,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildPlaceItem(NearbyPlace place) {
     return InkWell(
-      onTap: () {},
+      onTap: place.onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 12),
         child: Row(
@@ -592,242 +615,240 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-Widget _buildNewsEventsSection() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    child: Container(
-      width: 340,
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Acara",
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF275E76),
+  Widget _buildNewsEventsSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Container(
+        width: 340,
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: Offset(0, 4),
             ),
-          ),
-          SizedBox(height: 12),
-          Column(
-            children: newsEvents
-                .map((event) => _buildNewsEventCard(context, event))
-                .toList(),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-
-Widget _buildNewsEventCard(BuildContext context, NewsEvent event) {
-  return InkWell(
-    onTap: () => _showNewsDetail(context, event),
-    child: Container(
-      margin: EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-            child: Image.asset(
-              event.imagePath,
-              width: double.infinity,
-              height: 120,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  event.title,
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF275E76),
-                  ),
-                ),
-                SizedBox(height: 6),
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today, size: 14, color: Colors.grey),
-                    SizedBox(width: 4),
-                    Text(
-                      event.date,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(width: 12),
-                    Icon(Icons.location_on, size: 14, color: Colors.grey),
-                    SizedBox(width: 4),
-                    Text(
-                      event.location,
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-
-void _showNewsDetail(BuildContext context, NewsEvent event) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) => Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: SingleChildScrollView(
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
+            Text(
+              "Acara",
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF275E76),
               ),
             ),
+            SizedBox(height: 12),
+            Column(
+              children: newsEvents
+                  .map((event) => _buildNewsEventCard(context, event))
+                  .toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNewsEventCard(BuildContext context, NewsEvent event) {
+    return InkWell(
+      onTap: () => _showNewsDetail(context, event),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.asset(
                 event.imagePath,
                 width: double.infinity,
-                height: 200,
+                height: 120,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 16),
-            Text(
-              event.title,
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF275E76)),
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                SizedBox(width: 4),
-                Text(
-                  event.date,
-                  style: TextStyle(
+            Padding(
+              padding: EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    event.title,
+                    style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 14,
-                      color: Colors.grey[600]),
-                ),
-                SizedBox(width: 16),
-                Icon(Icons.location_on, size: 16, color: Colors.grey),
-                SizedBox(width: 4),
-                Text(
-                  event.location,
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      color: Colors.grey[600]),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Text(
-              "Deskripsi",
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF275E76)),
-            ),
-            SizedBox(height: 8),
-            Text(
-              event.description,
-              style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  color: Colors.grey[800]),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF275E76),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                ),
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  "Tutup",
-                  style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
+                      color: Color(0xFF275E76),
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                      SizedBox(width: 4),
+                      Text(
+                        event.date,
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Icon(Icons.location_on, size: 14, color: Colors.grey),
+                      SizedBox(width: 4),
+                      Text(
+                        event.location,
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
-    ),
-  );
-}
+    );
+  }
+
+  void _showNewsDetail(BuildContext context, NewsEvent event) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.8,
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  event.imagePath,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                event.title,
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF275E76)),
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                  SizedBox(width: 4),
+                  Text(
+                    event.date,
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Colors.grey[600]),
+                  ),
+                  SizedBox(width: 16),
+                  Icon(Icons.location_on, size: 16, color: Colors.grey),
+                  SizedBox(width: 4),
+                  Text(
+                    event.location,
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Deskripsi",
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF275E76)),
+              ),
+              SizedBox(height: 8),
+              Text(
+                event.description,
+                style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    color: Colors.grey[800]),
+              ),
+              SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF275E76),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    "Tutup",
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class NearbyPlace {
@@ -837,6 +858,7 @@ class NearbyPlace {
   final double latitude;
   final double longitude;
   final double? distance;
+  final VoidCallback? onTap;
 
   NearbyPlace({
     required this.name,
@@ -845,6 +867,7 @@ class NearbyPlace {
     required this.latitude,
     required this.longitude,
     this.distance,
+    this.onTap,
   });
 
   NearbyPlace copyWith({double? distance}) => NearbyPlace(
@@ -854,6 +877,7 @@ class NearbyPlace {
     latitude: latitude,
     longitude: longitude,
     distance: distance ?? this.distance,
+    onTap: onTap,
   );
 }
 
@@ -1042,7 +1066,7 @@ class _SemarAIChatState extends State<SemarAIChat> {
                         ),
                         child: TextField(
                           controller: _controller,
-                          onTap: _scrollToBottom, // Tambahkan ini agar scroll otomatis saat input diklik
+                          onTap: _scrollToBottom,
                           onSubmitted: (value) {
                             final text = value.trim();
                             if (text.isNotEmpty && !_isLoading) {
