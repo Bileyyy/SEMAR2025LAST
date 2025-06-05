@@ -34,7 +34,7 @@ class DashboardPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                        icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
                         onPressed: () {},
                       ),
                       Text(

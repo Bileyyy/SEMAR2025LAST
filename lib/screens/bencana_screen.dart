@@ -106,7 +106,7 @@ class _BencanaScreenState extends State<BencanaScreen> {
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back, color: Colors.black),
+                        icon: Icon(Icons.arrow_back_ios, color: Colors.black),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Text(

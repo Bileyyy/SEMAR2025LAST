@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:semar/widgets/custom_navbar.dart';
 import 'package:semar/widgets/navbar.dart';
 
-class LayananScreen extends StatelessWidget {
+class LayananScreen extends StatefulWidget {
+  @override
+  _LayananScreenState createState() => _LayananScreenState();
+}
+
+class _LayananScreenState extends State<LayananScreen> {
   final List<Map<String, String>> layanan = [
     {
       "nama": "Museum",
@@ -25,6 +30,30 @@ class LayananScreen extends StatelessWidget {
       "gambar": "assets/bg/tepengi.png",
     },
   ];
+
+  List<Map<String, String>> filteredLayanan = [];
+  String searchQuery = "";
+
+  @override
+  void initState() {
+    super.initState();
+    filteredLayanan = List.from(layanan);
+  }
+
+  void filterLayanan(String query) {
+    setState(() {
+      searchQuery = query.toLowerCase();
+      if (query.isEmpty) {
+        filteredLayanan = List.from(layanan);
+      } else {
+        filteredLayanan = layanan
+            .where((item) =>
+                item["nama"]!.toLowerCase().contains(searchQuery))
+            .toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -60,7 +89,7 @@ class LayananScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.black),
                     onPressed: () => Navigator.pop(context),
                   ),
 
@@ -69,7 +98,7 @@ class LayananScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.1),
@@ -80,6 +109,7 @@ class LayananScreen extends StatelessWidget {
                       ],
                     ),
                     child: TextField(
+                      onChanged: filterLayanan,
                       decoration: InputDecoration(
                         hintText: "Cari di sini",
                         hintStyle: TextStyle(fontFamily: 'Poppins'),
@@ -107,36 +137,48 @@ class LayananScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Expanded(
-              child: ListView.builder(
-                itemCount: layanan.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    margin: EdgeInsets.only(bottom: 16),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(10),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          layanan[index]["gambar"]!,
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: Text(
-                        layanan[index]["nama"]!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Poppins'),
-                      )
-                    )
-                      );
-                }
-              )
+                    child: filteredLayanan.isEmpty
+                      ? Center(
+                          child: Text(
+                            "Tidak ada data",
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 18,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: filteredLayanan.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              margin: EdgeInsets.only(bottom: 16),
+                              child: ListTile(
+                                contentPadding: EdgeInsets.all(10),
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    filteredLayanan[index]["gambar"]!,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                title: Text(
+                                  filteredLayanan[index]["nama"]!,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Poppins'
+                                  ),
+                                )
+                              )
+                            );
+                          }
+                        )
                   )
                 ],
               ),
@@ -152,46 +194,6 @@ class LayananScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => Navbar(selectedIndex: index)),
           );
         },
-      ),
-    );
-  }
-
-
-  Widget buildLayananItem(String title, String? imagePath) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          if (imagePath != null)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(imagePath, width: 40, height: 40, fit: BoxFit.cover),
-            ),
-          if (imagePath != null) SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

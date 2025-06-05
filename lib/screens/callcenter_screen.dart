@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:semar/widgets/custom_navbar.dart';
+import 'package:semar/widgets/navbar.dart';
 
 class CallCenterScreen extends StatefulWidget {
   const CallCenterScreen({super.key});
@@ -12,7 +14,7 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
   final List<Map<String, String>> _callCenterList = [
     {
       "title": "Pemadam Kebakaran",
-      "subtitle": "113 / 7607076 / 7605871 / 7616867",
+      "subtitle": "113",
       "image": "assets/bg/damkar.png"
     },
     {
@@ -27,7 +29,7 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
     },
     {
       "title": "Palang Merah Indonesia",
-      "subtitle": "118 / 8413476",
+      "subtitle": "118",
       "image": "assets/bg/pmise.jpg"
     },
     {
@@ -66,6 +68,7 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
     }).toList();
 
     return Scaffold(
+      extendBody: true,
       body: Stack(
         children: [
           // Background image
@@ -91,13 +94,10 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Back button
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
                     onPressed: () => Navigator.pop(context),
                   ),
-
-                  // Search bar
                   Container(
                     margin: const EdgeInsets.only(top: 10, bottom: 20),
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -125,20 +125,10 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
                         hintStyle: const TextStyle(fontFamily: 'Poppins'),
                         border: InputBorder.none,
                         icon: const Icon(Icons.search, color: Color(0xFF275E76)),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            setState(() {
-                              _searchQuery = "";
-                              _searchController.clear();
-                            });
-                          },
-                        ),
+                        
                       ),
                     ),
                   ),
-
-                  // Judul
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     child: Text(
@@ -158,8 +148,6 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
                       ),
                     ),
                   ),
-
-                  // Daftar call center
                   Expanded(
                     child: filteredList.isNotEmpty
                         ? ListView.builder(
@@ -188,6 +176,17 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
           ),
         ],
       ),
+      bottomNavigationBar: CustomNavbar(
+        selectedIndex: -1,
+        onItemTapped: (index) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Navbar(selectedIndex: index),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -205,7 +204,7 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
         boxShadow: const [
           BoxShadow(
             blurRadius: 4,
-            color: Colors.black26,
+            color: Colors.black,
             offset: Offset(2, 2),
           ),
         ],
@@ -233,6 +232,7 @@ class _CallCenterScreenState extends State<CallCenterScreen> {
                     Text(
                       title,
                       style: const TextStyle(
+                        fontFamily: 'Poppins',
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),

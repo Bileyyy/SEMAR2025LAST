@@ -12,8 +12,10 @@ class CustomNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double bottomInset = MediaQuery.of(context).viewPadding.bottom;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: EdgeInsets.fromLTRB(20, 15, 20, bottomInset + 15),
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [

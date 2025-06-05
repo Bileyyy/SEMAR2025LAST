@@ -38,7 +38,7 @@ class EventsScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                      child: Icon(Icons.arrow_back_ios, color: Colors.black),
                     ),
                   ),
                   Padding(
@@ -49,7 +49,7 @@ class EventsScreen extends StatelessWidget {
                         fontFamily: 'Poppins',
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                         shadows: [
                           Shadow(
                             color: Colors.black.withOpacity(0.4),
@@ -63,7 +63,8 @@ class EventsScreen extends StatelessWidget {
                   SizedBox(height: 20),
                   Center(
                     child: Container(
-                      width: 360,
+                      width: 330,
+                      height: 130,
                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.white,

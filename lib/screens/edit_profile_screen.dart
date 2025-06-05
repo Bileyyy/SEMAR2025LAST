@@ -16,13 +16,14 @@ class EditProfileScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
           'Edit Profile',
           style: TextStyle(
-            color: Colors.white,
+            fontFamily: 'Poppins',
+            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.w700,
             shadows: [
@@ -38,16 +39,18 @@ class EditProfileScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Background image
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/bg/lawang1000.png'), // Ganti dengan path image kamu
+                image: AssetImage('assets/bg/lawang1000.png'), 
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          // White rounded container
+          Container(
+            width: double.infinity,
+            color: Color(0xFFFFF2DA).withOpacity(0.6),
+          ),
           Align(
             alignment: Alignment.center,
             child: SingleChildScrollView(
@@ -61,7 +64,6 @@ class EditProfileScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Profile picture with edit icon
                     Stack(
                       alignment: Alignment.bottomRight,
                       children: [
@@ -117,6 +119,7 @@ class EditProfileScreen extends StatelessWidget {
                             child: const Text(
                               'CANCEL',
                               style: TextStyle(
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
@@ -137,6 +140,7 @@ class EditProfileScreen extends StatelessWidget {
                             child: const Text(
                               'SAVE',
                               style: TextStyle(
+                                fontFamily: 'Poppins',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -161,6 +165,7 @@ class EditProfileScreen extends StatelessWidget {
       child: Text(
         text,
         style: const TextStyle(
+          fontFamily: 'Poppins',
           fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
@@ -181,7 +186,8 @@ class EditProfileScreen extends StatelessWidget {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      style: const TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 14, fontFamily: 'Poppins'),
     );
   }
 }
+

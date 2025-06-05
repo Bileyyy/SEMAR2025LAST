@@ -48,6 +48,7 @@ dependencies:
   flutter_map: ^8.1.1
   latlong2: ^0.9.1
   url_launcher: ^6.3.1
+  crypto: ^3.0.6
 
 
 dev_dependencies:
@@ -112,6 +113,7 @@ flutter:
     - assets/bg/ambulance.png
     - assets/bg/tugmud.jpg
     - assets/bg/sampo.png
+    - assets/bg/ailogo.png
 
 
   # The following line ensures that the Material Icons font is

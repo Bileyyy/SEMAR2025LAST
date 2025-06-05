@@ -17,6 +17,105 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+class AnimatedGradientFAB extends StatefulWidget {
+  final VoidCallback onPressed;
+
+  const AnimatedGradientFAB({Key? key, required this.onPressed}) : super(key: key);
+
+  @override
+  _AnimatedGradientFABState createState() => _AnimatedGradientFABState();
+}
+
+class _AnimatedGradientFABState extends State<AnimatedGradientFAB> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  double posX = 16.0;
+  double posY = 300.0; 
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 4),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: posX,
+          top: posY,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                posX += details.delta.dx;
+                posY += details.delta.dy;
+              });
+            },
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Container(
+                  width: 55,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: SweepGradient(
+                      startAngle: 0.0,
+                      endAngle: 2 * pi,
+                      transform: GradientRotation(_controller.value * 2 * pi),
+                      colors: [
+                        const Color.fromARGB(255, 255, 155, 24),
+                        Colors.purpleAccent,
+                        Colors.blueAccent,
+                        const Color.fromARGB(255, 255, 205, 96),
+                        const Color.fromARGB(255, 255, 155, 24),
+                      ],
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: widget.onPressed,
+                          child: Transform.translate(
+  offset: const Offset(0, -2), 
+  child: Transform.scale(
+    scale: 1.50,
+    child: Image.asset(
+      "assets/bg/ailogo.png",
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+  ),
+),
+
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _HomeScreenState extends State<HomeScreen> {
   List<NearbyPlace> nearbyPlaces = [];
   List<NearbyPlace> allPlaces = [];
@@ -269,23 +368,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           // Semar AI Chat Bubble
-          Positioned(
-            bottom: 80,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => SemarAIChat(),
-                );
-              },
-              backgroundColor: Color(0xFF275E76),
-              child: Icon(Icons.chat_bubble_outline, color: Colors.white),
-              elevation: 4,
-            ),
-          ),
+         AnimatedGradientFAB(
+  onPressed: () {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SemarAIChat(),
+    );
+  },
+),
+
         ],
       ),
     );

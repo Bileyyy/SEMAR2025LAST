@@ -43,7 +43,7 @@ class DetailEvent extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: Icon(Icons.arrow_back, color: Colors.white),
+                      child: Icon(Icons.arrow_back_ios, color: Colors.white),
                     ),
                   ),
                   Padding(

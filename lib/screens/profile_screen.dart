@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:semar/screens/edit_profile_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -42,11 +47,9 @@ class ProfileScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 50, // Ukuran lingkaran profil
+                      radius: 50,
                       backgroundImage: AssetImage("assets/profile_picture.png"),
                     ),
-
-                    // Tombol edit profil di kanan bawah lingkaran
                     Positioned(
                       right: 0,
                       bottom: 0,
@@ -65,7 +68,10 @@ class ProfileScreen extends StatelessWidget {
                         child: IconButton(
                           icon: Icon(Icons.edit, color: Color(0xFF275E76), size: 20),
                           onPressed: () {
-                            // Aksi edit profil
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => EditProfileScreen()),
+                            );
                           },
                         ),
                       ),
@@ -94,10 +100,10 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
 
-                // Container putih untuk menu lainnya
+                // Container putih untuk menu
                 Center(
                   child: Container(
-                    width: screenWidth * 0.75, // Lebih kecil agar proporsional
+                    width: screenWidth * 0.75,
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -113,19 +119,18 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                         ListTile(
+                        ListTile(
                           leading: Icon(Icons.edit, color: Color(0xFF275E76), size: 20),
                           title: Text(
                             "Edit profile",
                             style: TextStyle(fontFamily: 'Poppins', fontSize: 13),
                           ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfileScreen())
-                        );
-                      },
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => EditProfileScreen()),
+                            );
+                          },
                         ),
                         Divider(height: 1),
                         ListTile(
@@ -141,7 +146,11 @@ class ProfileScreen extends StatelessWidget {
                           leading: Icon(Icons.logout, color: Colors.redAccent, size: 20),
                           title: Text(
                             "Keluar",
-                            style: TextStyle(fontFamily: 'Poppins', fontSize: 13, color: Colors.redAccent),
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 13,
+                              color: Colors.redAccent,
+                            ),
                           ),
                           onTap: () {},
                         ),

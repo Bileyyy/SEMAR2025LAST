@@ -3,7 +3,8 @@ import 'package:semar/widgets/custom_navbar.dart';
 import 'package:semar/widgets/navbar.dart';
 import 'package:semar/screens/cuaca_screen.dart';
 import 'package:semar/screens/bencana_screen.dart';
-import 'package:semar/screens/jadwal_adzan_screen.dart'; // Add this import
+import 'package:semar/screens/jadwal_adzan_screen.dart';
+import 'package:semar/screens/pulsa_screen.dart'; // ← Tambahan penting
 
 class BencanaCuacaScreen extends StatelessWidget {
   @override
@@ -14,7 +15,6 @@ class BencanaCuacaScreen extends StatelessWidget {
       extendBody: true,
       body: Stack(
         children: [
-          // Background image
           Container(
             width: double.infinity,
             height: screenHeight,
@@ -25,27 +25,24 @@ class BencanaCuacaScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Overlay warna
           Container(
             width: double.infinity,
             height: screenHeight,
             color: Color(0xFFFFF2DA).withOpacity(0.6),
           ),
-
-          // Konten halaman
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Expanded(
-                    child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    SizedBox(height: 20),
+                    Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -69,11 +66,18 @@ class BencanaCuacaScreen extends StatelessWidget {
                             icon: Icons.access_time,
                             screen: JadwalAdzanScreen(),
                           ),
+                          SizedBox(height: 30),
+                          _buildMenuButton(
+                            context: context,
+                            title: "Pulsa & Paket Data",
+                            icon: Icons.phone_android,
+                            screen: PulsaScreen(),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -138,7 +142,7 @@ class BencanaCuacaScreen extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF275E76),
-              ),
+                ),
               )
             ],
           ),

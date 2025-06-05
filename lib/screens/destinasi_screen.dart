@@ -90,7 +90,7 @@ class _DestinasiScreenState extends State<DestinasiScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.black),
                     onPressed: () => Navigator.pop(context),
                   ),
                   Container(
@@ -136,22 +136,53 @@ class _DestinasiScreenState extends State<DestinasiScreen> {
                   ),
                   SizedBox(height: 10),
                   Expanded(
-                    child: GridView.builder(
-                      itemCount: filteredList.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        childAspectRatio: 0.85,
-                      ),
-                      itemBuilder: (context, index) {
-                        return _buildDestinasiItem(
-                          filteredList[index]['title']!,
-                          filteredList[index]['image']!,
-                          filteredList[index]['description']!,
-                        );
-                      },
-                    ),
+                    child: filteredList.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search_off,
+                                  size: 50,
+                                  color: Colors.black54,
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  "Tidak ada data",
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 18,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                if (searchText.isNotEmpty)
+                                  Text(
+                                    "Tidak ditemukan hasil untuk '$searchText'",
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          )
+                        : GridView.builder(
+                            itemCount: filteredList.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                            ),
+                            itemBuilder: (context, index) {
+                              return _buildDestinasiItem(
+                                filteredList[index]['title']!,
+                                filteredList[index]['image']!,
+                                filteredList[index]['description']!,
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
