@@ -1090,7 +1090,7 @@ class _SemarAIChatState extends State<SemarAIChat> {
         child: Container(
           height: MediaQuery.of(context).size.height * 0.75,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color(0xFFFDF0D4),
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
@@ -1100,101 +1100,124 @@ class _SemarAIChatState extends State<SemarAIChat> {
               ),
             ],
           ),
-          child: Column(
+          child: Stack(
             children: [
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Color(0xFF275E76),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.chat, color: Color(0xFF275E76)),
-                    ),
-                    SizedBox(width: 12),
-                    Text(
-                      'Semar AI',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(Icons.close, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
+              // Background logo layer
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.3,
+                  child: Image.asset(
+                    'assets/icon/logomar-removebg-preview.png',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                  ),
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: EdgeInsets.all(16),
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    final message = _messages[index];
-                    if (message.isLoading) return _buildLoadingIndicator();
-                    return _buildMessageBubble(message);
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(top: BorderSide(color: Colors.grey.shade200)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                        child: TextField(
-                          controller: _controller,
-                          onTap: _scrollToBottom,
-                          onSubmitted: (value) {
-                            final text = value.trim();
-                            if (text.isNotEmpty && !_isLoading) {
-                              sendToOpenRouter(text);
-                              _controller.clear();
-                            }
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Tanyakan tentang Semarang...',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+              // Chat content
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(180, 161, 115, 1),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage('assets/bg/ailogo.png'),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Semar AI',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 8),
-                    Material(
-                      elevation: 2,
-                      borderRadius: BorderRadius.circular(24),
-                      color: Color(0xFF275E76),
-                      child: IconButton(
-                        icon: Icon(Icons.send, color: Colors.white),
-                        onPressed: _isLoading
-                            ? null
-                            : () {
-                                final text = _controller.text.trim();
-                                if (text.isNotEmpty) {
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.all(16),
+                      itemCount: _messages.length,
+                      itemBuilder: (context, index) {
+                        final message = _messages[index];
+                        if (message.isLoading) return _buildLoadingIndicator();
+                        return _buildMessageBubble(message);
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFFDF0D4),
+                      border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: TextField(
+                              controller: _controller,
+                              onTap: _scrollToBottom,
+                              onSubmitted: (value) {
+                                final text = value.trim();
+                                if (text.isNotEmpty && !_isLoading) {
                                   sendToOpenRouter(text);
                                   _controller.clear();
                                 }
                               },
-                      ),
+                              decoration: InputDecoration(
+                                hintText: 'Tanyakan tentang Semarang...',
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Material(
+                          elevation: 2,
+                          borderRadius: BorderRadius.circular(24),
+                          color: Color.fromRGBO(180, 161, 115, 1),
+                          child: IconButton(
+                            icon: Icon(Icons.send, color: Colors.white),
+                            onPressed: _isLoading
+                                ? null
+                                : () {
+                                    final text = _controller.text.trim();
+                                    if (text.isNotEmpty) {
+                                      sendToOpenRouter(text);
+                                      _controller.clear();
+                                    }
+                                  },
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -1209,16 +1232,23 @@ class _SemarAIChatState extends State<SemarAIChat> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundColor: Color(0xFF275E76).withOpacity(0.1),
-            child: Icon(Icons.chat, color: Color(0xFF275E76), size: 20),
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage('assets/bg/ailogo.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           SizedBox(width: 8),
           Expanded(
             child: Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Color(0xFF275E76).withOpacity(0.1),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -1248,24 +1278,36 @@ class _SemarAIChatState extends State<SemarAIChat> {
             message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!message.isUser)
-            CircleAvatar(
-              backgroundColor: Color(0xFF275E76).withOpacity(0.1),
-              child: Icon(Icons.chat, color: Color(0xFF275E76), size: 20),
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage('assets/bg/ailogo.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           if (!message.isUser) SizedBox(width: 8),
           Flexible(
             child: Container(
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: message.isUser
-                    ? Color(0xFF275E76)
-                    : Color(0xFF275E76).withOpacity(0.1),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                  ),
+                ],
               ),
               child: Text(
                 message.text,
                 style: TextStyle(
-                  color: message.isUser ? Colors.white : Colors.black87,
+                  color: Colors.black87,
                   fontSize: 14,
                   height: 1.5,
                 ),
@@ -1274,9 +1316,14 @@ class _SemarAIChatState extends State<SemarAIChat> {
           ),
           if (message.isUser) SizedBox(width: 8),
           if (message.isUser)
-            CircleAvatar(
-              backgroundColor: Color(0xFF275E76).withOpacity(0.1),
-              child: Icon(Icons.person, color: Color(0xFF275E76)),
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color.fromRGBO(180, 161, 115, 1),
+              ),
+              child: Icon(Icons.person, color: Colors.white),
             ),
         ],
       ),

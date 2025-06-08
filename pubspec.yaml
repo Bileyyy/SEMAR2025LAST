@@ -52,8 +52,14 @@ dependencies:
 
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/logomar.jpg"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -114,6 +120,8 @@ flutter:
     - assets/bg/tugmud.jpg
     - assets/bg/sampo.png
     - assets/bg/ailogo.png
+    - assets/icon/logomar-removebg-preview.png
+    - assets/bg/powered by .png
 
 
   # The following line ensures that the Material Icons font is
