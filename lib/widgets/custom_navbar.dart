@@ -67,7 +67,10 @@ class CustomNavbar extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              child: Center(
+                              child: Padding(
+                                padding: index == 0
+                                    ? const EdgeInsets.only(left: 7)
+                                    : EdgeInsets.zero,
                                 child: Icon(
                                   _getIcon(index),
                                   color: Colors.white,
@@ -97,7 +100,7 @@ class CustomNavbar extends StatelessWidget {
   IconData _getIcon(int index) {
     switch (index) {
       case 0:
-        return FontAwesomeIcons.home;
+        return FontAwesomeIcons.house;
       case 1:
         return FontAwesomeIcons.newspaper;
       case 2:

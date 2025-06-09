@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.7,
         latitude: -6.9839838,
         longitude: 110.4095893,
-        onTap: () => _openPlaceInMaps(-6.9839838, 110.4095893, "Lawang Sewu"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/aepT5SRn5C6ShMHr7"),
       ),
       NearbyPlace(
         name: "Kota Lama",
@@ -163,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.5,
         latitude: -6.9675,
         longitude: 110.4256,
-        onTap: () => _openPlaceInMaps(-6.9675, 110.4256, "Kota Lama Semarang"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/Hss7dkXpJqhC5K2Q7"),
       ),
       NearbyPlace(
         name: "Museum Ronggowarsito",
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.3,
         latitude: -7.0056,
         longitude: 110.4389,
-        onTap: () => _openPlaceInMaps(-7.0056, 110.4389, "Museum Ronggowarsito"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/S6GzaA78io9kahTT7"),
       ),
       NearbyPlace(
         name: "Sam Poo Kong",
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.6,
         latitude: -7.0139,
         longitude: 110.4414,
-        onTap: () => _openPlaceInMaps(-7.0139, 110.4414, "Sam Poo Kong"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/pGPc29HqXeiNsjHR8"),
       ),
       NearbyPlace(
         name: "Pagoda Avalokitesvara",
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.4,
         latitude: -7.0865,
         longitude: 110.4183,
-        onTap: () => _openPlaceInMaps(-7.0865, 110.4183, "Pagoda Avalokitesvara"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/i2Zs6oM9FvPHeAXDA"),
       ),
       NearbyPlace(
         name: "Tugu Muda",
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.2,
         latitude: -6.9825,
         longitude: 110.4086,
-        onTap: () => _openPlaceInMaps(-6.9825, 110.4086, "Tugu Muda Semarang"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/vqM2u2TqKLKj6fah7"),
       ),
       NearbyPlace(
         name: "Masjid Agung Jawa Tengah",
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.8,
         latitude: -7.0058,
         longitude: 110.4411,
-        onTap: () => _openPlaceInMaps(-7.0058, 110.4411, "Masjid Agung Jawa Tengah"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/9j9W8KgKVzpH3Q1aA"),
       ),
       NearbyPlace(
         name: "Kampung Pelangi",
@@ -211,24 +211,21 @@ class _HomeScreenState extends State<HomeScreen> {
         rating: 4.1,
         latitude: -6.9888812,
         longitude: 110.4083781,
-        onTap: () => _openPlaceInMaps(-6.9888812, 110.4083781, "Kampung Pelangi Semarang"),
+        onTap: () => _openUrl("https://maps.app.goo.gl/P2N6pNTrVtCP9vKj8"),
       ),
     ];
   }
 
-  Future<void> _openPlaceInMaps(double lat, double lng, String placeName) async {
-    final url = Uri.parse(
-      'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query_place_id=$placeName'
+Future<void> _openUrl(String url) async {
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Tidak dapat membuka URL')),
     );
-    
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Tidak dapat membuka Google Maps')),
-      );
-    }
   }
+}
 
   Future<void> _getCurrentLocation() async {
     setState(() {
@@ -452,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _buildMenuButton(context, "Destinasi", Icons.map, DestinasiScreen()),
             _buildMenuButton(context, "Tempat Bersejarah", Icons.map_outlined, SejarahScreen()),
-            _buildMenuButton(context, "Bencana & Cuaca", Icons.cloud, BencanaCuacaScreen()),
+            _buildMenuButton(context, "Informasi", Icons.info, BencanaCuacaScreen()),
             _buildMenuButton(context, "Kuliner", Icons.restaurant, KulinerScreen()),
             _buildMenuButton(context, "Layanan Publik", Icons.help_outline, LayananScreen()),
             _buildMenuButton(context, "Call Center", Icons.phone, CallCenterScreen()),
@@ -463,12 +460,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMenuButton(BuildContext context, String title, IconData icon, Widget screen) {
-    return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => screen)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
+  final isHistoryButton = title == "Tempat Bersejarah";
+  
+  return InkWell(
+    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => screen)),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Transform.translate(
+          offset: isHistoryButton ? Offset(0, 5) : Offset.zero, 
+          child: Container(
             width: 50,
             height: 50,
             decoration: BoxDecoration(
@@ -477,21 +478,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: Icon(icon, color: Colors.white, size: 24),
           ),
-          SizedBox(height: 6),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF275E76),
-            ),
+        ),
+        SizedBox(height: isHistoryButton ? 1 : 6), 
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF275E76),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildGallerySection() {
     return Column(
@@ -624,67 +626,69 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPlaceItem(NearbyPlace place) {
-    return InkWell(
-      onTap: place.onTap,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                place.imagePath,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ),
+Widget _buildPlaceItem(NearbyPlace place) {
+  return InkWell(
+    onTap: place.onTap,
+    child: Container(
+      margin: EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              place.imagePath,
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
             ),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    place.name,
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF275E76),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  place.name,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF275E76),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 16),
+                    SizedBox(width: 4),
+                    Text(
+                      place.rating.toString(),
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.amber, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        place.rating.toString(),
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                    SizedBox(width: 12),
+                    Icon(Icons.location_on, size: 16, color: Colors.red),
+                    SizedBox(width: 4),
+                    Text(
+                      place.distance != null 
+                        ? "${place.distance!.toStringAsFixed(1)} km" 
+                        : "-",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        color: Colors.grey[600],
                       ),
-                      SizedBox(width: 12),
-                      Icon(Icons.location_on, size: 16, color: Colors.red),
-                      SizedBox(width: 4),
-                      Text(
-                        place.distance != null 
-                          ? "${place.distance!.toStringAsFixed(1)} km" 
-                          : "-",
-                        style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Container(
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                InkWell(
+                  onTap: place.onTap,
+                  child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Color(0xFF7EB7D9).withOpacity(0.2),
@@ -699,14 +703,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildNewsEventsSection() {
     return Padding(
@@ -1102,7 +1107,6 @@ class _SemarAIChatState extends State<SemarAIChat> {
           ),
           child: Stack(
             children: [
-              // Background logo layer
               Positioned.fill(
                 child: Opacity(
                   opacity: 0.3,
@@ -1113,11 +1117,10 @@ class _SemarAIChatState extends State<SemarAIChat> {
                   ),
                 ),
               ),
-              // Chat content
               Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(180, 161, 115, 1),
                       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -1125,8 +1128,8 @@ class _SemarAIChatState extends State<SemarAIChat> {
                     child: Row(
                       children: [
                         Container(
-                          width: 60,
-                          height: 60,
+                          width: 70,
+                          height: 70,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -1139,6 +1142,7 @@ class _SemarAIChatState extends State<SemarAIChat> {
                         Text(
                           'Semar AI',
                           style: TextStyle(
+                            fontFamily: 'Poppins',
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -1188,8 +1192,10 @@ class _SemarAIChatState extends State<SemarAIChat> {
                                   _controller.clear();
                                 }
                               },
+                              style: TextStyle(fontFamily: 'Poppins'),
                               decoration: InputDecoration(
                                 hintText: 'Tanyakan tentang Semarang...',
+                                hintStyle: TextStyle(fontFamily: 'Poppins'),
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(horizontal: 16),
                               ),
@@ -1259,7 +1265,8 @@ class _SemarAIChatState extends State<SemarAIChat> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                   SizedBox(width: 8),
-                  Text('Semar AI sedang mengetik...'),
+                  Text('Semar AI sedang mengetik...',
+                      style: TextStyle(fontFamily: 'Poppins')),
                 ],
               ),
             ),
@@ -1310,6 +1317,7 @@ class _SemarAIChatState extends State<SemarAIChat> {
                   color: Colors.black87,
                   fontSize: 14,
                   height: 1.5,
+                  fontFamily: 'Poppins',
                 ),
               ),
             ),

@@ -14,7 +14,6 @@ class _BencanaScreenState extends State<BencanaScreen> {
   List<Earthquake> earthquakes = [];
   bool isLoading = true;
   final MapController mapController = MapController();
-  final LatLng semarangCenter = LatLng(-6.9667, 110.4167); // Koordinat Semarang
 
   @override
   void initState() {
@@ -35,15 +34,21 @@ class _BencanaScreenState extends State<BencanaScreen> {
 
         var gempaList = data['Infogempa']['gempa'] as List;
         for (var quake in gempaList) {
-          loadedEarthquakes.add(Earthquake(
-            magnitude: double.parse(quake['Magnitude']),
-            location: quake['Wilayah'],
-            time: DateFormat("yyyy-MM-dd HH:mm:ss")
-                .parse('${quake['Tanggal']} ${quake['Jam']}'),
-            depth: double.parse(quake['Kedalaman'].split(' ')[0]),
-            latitude: _parseCoordinate(quake['Lintang']),
-            longitude: _parseCoordinate(quake['Bujur']),
-          ));
+          try {
+            final dateTimeStr = '${quake['Tanggal']} ${quake['Jam']}';
+            final dateTime = DateFormat("dd-MM-yyyy HH:mm:ss").parse(dateTimeStr);
+
+            loadedEarthquakes.add(Earthquake(
+              magnitude: double.parse(quake['Magnitude']),
+              location: quake['Wilayah'],
+              time: dateTime,
+              depth: double.parse(quake['Kedalaman'].split(' ')[0]),
+              latitude: _parseCoordinate(quake['Lintang']),
+              longitude: _parseCoordinate(quake['Bujur']),
+            ));
+          } catch (_) {
+            continue;
+          }
         }
 
         setState(() {
@@ -52,10 +57,12 @@ class _BencanaScreenState extends State<BencanaScreen> {
           if (earthquakes.isNotEmpty) {
             mapController.move(
               LatLng(earthquakes.first.latitude, earthquakes.first.longitude),
-              9.0,
+              5.0,
             );
           }
         });
+      } else {
+        throw Exception('Status bukan 200');
       }
     } catch (e) {
       setState(() => isLoading = false);
@@ -74,16 +81,20 @@ class _BencanaScreenState extends State<BencanaScreen> {
     return value;
   }
 
+  Color _getMagnitudeColor(double magnitude) {
+    if (magnitude < 4.0) return Colors.green;
+    if (magnitude < 6.0) return Colors.orange;
+    return Colors.red;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      extendBody: true,
       body: Stack(
         children: [
           Container(
-            width: double.infinity,
             height: screenHeight,
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -93,24 +104,21 @@ class _BencanaScreenState extends State<BencanaScreen> {
             ),
           ),
           Container(
-            width: double.infinity,
-            height: screenHeight,
             color: Color(0xFFFFF2DA).withOpacity(0.6),
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                        icon: Icon(Icons.arrow_back_ios),
                         onPressed: () => Navigator.pop(context),
                       ),
                       Text(
-                        "Gempa Semarang",
+                        'Gempa Semarang',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 20,
@@ -124,7 +132,6 @@ class _BencanaScreenState extends State<BencanaScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
                   Expanded(
                     child: isLoading
                         ? Center(child: CircularProgressIndicator())
@@ -137,16 +144,17 @@ class _BencanaScreenState extends State<BencanaScreen> {
                               )
                             : Column(
                                 children: [
-                                  // Map Section
+                                  // Map section
                                   Container(
                                     height: 200,
+                                    margin: EdgeInsets.only(bottom: 10),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 10,
-                                          spreadRadius: 2,
+                                          color: Colors.black26,
+                                          blurRadius: 8,
+                                          offset: Offset(0, 2),
                                         ),
                                       ],
                                     ),
@@ -154,72 +162,94 @@ class _BencanaScreenState extends State<BencanaScreen> {
                                       borderRadius: BorderRadius.circular(15),
                                       child: FlutterMap(
                                         mapController: mapController,
-                                       options: MapOptions(
-  initialCenter: semarangCenter, 
-  initialZoom: 9.0, 
-),
+                                        options: MapOptions(
+                                          initialCenter: LatLng(
+                                            earthquakes.first.latitude,
+                                            earthquakes.first.longitude,
+                                          ),
+                                          initialZoom: 5.0,
+                                        ),
                                         children: [
                                           TileLayer(
                                             urlTemplate:
                                                 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                                             subdomains: ['a', 'b', 'c'],
-                                            userAgentPackageName:
-                                                'com.example.app',
                                           ),
                                           MarkerLayer(
-                                            markers: earthquakes
-                                                .map(
-                                                  (quake) => Marker(
-                                                    width: 40.0,
-                                                    height: 40.0,
-                                                    point: LatLng(
-                                                      quake.latitude,
-                                                      quake.longitude,
-                                                    ),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        mapController.move(
-                                                          LatLng(
-                                                            quake.latitude,
-                                                            quake.longitude,
-                                                          ),
-                                                          12.0,
-                                                        );
-                                                      },
-                                                      child: Icon(
-                                                        Icons.location_on,
-                                                        color:
-                                                            _getMagnitudeColor(
-                                                                quake
-                                                                    .magnitude),
-                                                        size: 30 +
-                                                            quake.magnitude * 2,
-                                                      ),
-                                                    ),
+                                            markers: earthquakes.map((quake) {
+                                              return Marker(
+                                                width: 40,
+                                                height: 40,
+                                                point: LatLng(
+                                                    quake.latitude,
+                                                    quake.longitude),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    mapController.move(
+                                                      LatLng(quake.latitude,
+                                                          quake.longitude),
+                                                      7.5,
+                                                    );
+                                                  },
+                                                  child: Icon(
+                                                    Icons.location_on,
+                                                    size: 30 +
+                                                        quake.magnitude * 2,
+                                                    color: _getMagnitudeColor(
+                                                        quake.magnitude),
                                                   ),
-                                                )
-                                                .toList(),
+                                                ),
+                                              );
+                                            }).toList(),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 15),
                                   Text(
-                                    'Gempa Terkini (${earthquakes.length} kejadian)',
+                                    'Daftar Gempa (${earthquakes.length} data)',
                                     style: TextStyle(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   SizedBox(height: 10),
                                   Expanded(
                                     child: ListView.builder(
                                       itemCount: earthquakes.length,
-                                      itemBuilder: (context, index) =>
-                                          _buildEarthquakeCard(
-                                              earthquakes[index]),
+                                      itemBuilder: (context, index) {
+                                        final quake = earthquakes[index];
+                                        return Card(
+                                          margin:
+                                              EdgeInsets.symmetric(vertical: 6),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                          child: ListTile(
+                                            leading: Icon(
+                                              Icons.terrain,
+                                              color: _getMagnitudeColor(
+                                                  quake.magnitude),
+                                              size: 30,
+                                            ),
+                                            title: Text(
+                                              '${quake.magnitude.toStringAsFixed(1)} SR - ${quake.location}',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            subtitle: Text(
+                                              DateFormat('dd MMM yyyy, HH:mm')
+                                                  .format(quake.time),
+                                            ),
+                                            onTap: () {
+                                              mapController.move(
+                                                  LatLng(quake.latitude,
+                                                      quake.longitude),
+                                                  7.5);
+                                            },
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],
@@ -232,82 +262,6 @@ class _BencanaScreenState extends State<BencanaScreen> {
         ],
       ),
     );
-  }
-
-  Widget _buildEarthquakeCard(Earthquake earthquake) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 3,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(15),
-        onTap: () {
-          mapController.move(
-            LatLng(earthquake.latitude, earthquake.longitude),
-            12.0,
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.landscape,
-                        color: _getMagnitudeColor(earthquake.magnitude),
-                        size: 30,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        '${earthquake.magnitude.toStringAsFixed(1)} SR',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: _getMagnitudeColor(earthquake.magnitude),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Kedalaman: ${earthquake.depth.toStringAsFixed(1)} km',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              Text(
-                earthquake.location,
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.access_time, size: 16, color: Colors.grey),
-                  SizedBox(width: 5),
-                  Text(
-                    DateFormat('dd MMM yyyy, HH:mm').format(earthquake.time),
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Color _getMagnitudeColor(double magnitude) {
-    if (magnitude < 4.0) return Colors.green;
-    if (magnitude < 6.0) return Colors.orange;
-    return Colors.red;
   }
 }
 

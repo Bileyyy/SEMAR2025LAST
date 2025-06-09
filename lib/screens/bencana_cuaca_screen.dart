@@ -66,13 +66,7 @@ class BencanaCuacaScreen extends StatelessWidget {
                             icon: Icons.access_time,
                             screen: JadwalAdzanScreen(),
                           ),
-                          SizedBox(height: 30),
-                          _buildMenuButton(
-                            context: context,
-                            title: "Pulsa & Paket Data",
-                            icon: Icons.phone_android,
-                            screen: PulsaScreen(),
-                          ),
+                          
                         ],
                       ),
                     ),
